@@ -9,7 +9,7 @@ class cpan (
     fail("installdirs must be one of {perl,site,vendor}")
   }
   case $::osfamily {
-    Debian: {
+    'Debian': {
       if $manage_package {
         package { 'perl-modules': ensure => installed }
         package { 'gcc': ensure => installed }
@@ -21,21 +21,21 @@ class cpan (
       if $manage_config {
         file { [ '/etc/perl', '/etc/perl/CPAN' ]:
           ensure => directory,
-          owner  => root,
-          group  => root,
+          owner  => 'root',
+          group  => 'root',
           mode   => '0755',
         }
         file { '/etc/perl/CPAN/Config.pm':
           ensure  => present,
-          owner   => root,
-          group   => root,
+          owner   => 'root',
+          group   => 'root',
           mode    => '0644',
           content  => template('cpan/Config.pm.erb'),
           require => File['/etc/perl/CPAN']
         }
       }
     }
-    Redhat: {
+    'Redhat': {
       if versioncmp($::operatingsystemmajrelease, '6') >= 0 {
         if $manage_package {
           package { 'perl-CPAN': ensure => installed }
@@ -48,8 +48,8 @@ class cpan (
         if $manage_config {
           file { '/usr/share/perl5/CPAN/Config.pm':
             ensure => present,
-            owner  => root,
-            group  => root,
+            owner  => 'root',
+            group  => 'root',
             mode   => '0644',
             content  => template('cpan/Config.pm.erb'),
           }
@@ -61,8 +61,8 @@ class cpan (
         if $manage_config {
           file { '/usr/lib/perl5/5.8.8/CPAN/Config.pm':
             ensure => present,
-            owner  => root,
-            group  => root,
+            owner  => 'root',
+            group  => 'root',
             mode   => '0644',
             source => 'puppet:///modules/cpan/Config.pm',
             content  => template('cpan/Config.pm.erb'),
@@ -70,7 +70,7 @@ class cpan (
         }
       }
     }
-    Windows: {
+    'Windows': {
 
     }
     default: {
